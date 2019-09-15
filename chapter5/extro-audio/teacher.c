@@ -78,31 +78,6 @@ int main(int argc, char *argv[])
     /*register all formats and codec*/
     av_register_all();
 
-    /*
-    ofmt_ctx = avformat_alloc_context();
-    output_fmt = av_guess_format(NULL, dst_filename, NULL);
-    if(!output_fmt){
-        av_log(NULL, AV_LOG_DEBUG, "Cloud not guess file format \n");
-        exit(1);
-    }
-
-    ofmt_ctx->oformat = output_fmt;
-
-    out_stream = avformat_new_stream(ofmt_ctx, NULL);
-    if(!out_stream){
-        av_log(NULL, AV_LOG_DEBUG, "Failed to create out stream!\n");
-        exit(1);
-    }
-
-    if((err_code = avio_open(&ofmt_ctx->pb, dst_filename, AVIO_FLAG_WRITE)) < 0) {
-        av_strerror(err_code, errors, 1024);
-        av_log(NULL, AV_LOG_DEBUG, "Could not open file %s, %d(%s)\n",
-               dst_filename,
-               err_code,
-               errors);
-        exit(1);
-    }
-    */
 
     dst_fd = fopen(dst_filename, "wb");
     if (!dst_fd) {
@@ -156,21 +131,10 @@ int main(int argc, char *argv[])
         return AVERROR(EINVAL);
     }
 
-    /*
-    if (avformat_write_header(ofmt_ctx, NULL) < 0) {
-        av_log(NULL, AV_LOG_DEBUG, "Error occurred when opening output file");
-        exit(1);
-    }
-    */
 
     /*read frames from media file*/
     while(av_read_frame(fmt_ctx, &pkt) >=0 ){
         if(pkt.stream_index == audio_stream_index){
-            /*
-            pkt.stream_index = 0;
-            av_write_frame(ofmt_ctx, &pkt);
-            av_free_packet(&pkt);
-            */
 
             char adts_header_buf[7];
             adts_header(adts_header_buf, pkt.size);
